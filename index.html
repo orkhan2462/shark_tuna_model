@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Lotka-Volterra Euler Simulator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Shark-Tuna Euler Simulator</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -13,6 +12,7 @@
             --card-bg: #ffffff;
             --text: #1e293b;
             --border: #e2e8f0;
+            --accent: #f59e0b;
         }
 
         body {
@@ -64,6 +64,8 @@
             border-radius: 12px;
             padding: 1.25rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            display: flex;
+            flex-direction: column;
         }
 
         .card h2 {
@@ -77,10 +79,6 @@
 
         .control-group {
             margin-bottom: 1rem;
-        }
-
-        .control-group:last-child {
-            margin-bottom: 0;
         }
 
         label {
@@ -124,10 +122,64 @@
             text-align: center;
         }
 
-        .chart-container {
+        /* Submit Button Styling */
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: auto;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .submit-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .chart-wrapper {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 10px;
             position: relative;
+        }
+
+        canvas {
+            display: block;
             width: 100%;
-            height: 400px;
+            height: 380px;
+            background: #ffffff;
+        }
+
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 4px;
+            border-radius: 2px;
         }
 
         .math-box {
@@ -139,9 +191,8 @@
             font-size: 0.85rem;
             overflow-x: auto;
             margin-top: 1.25rem;
-            text-align: left;
         }
-        .math-title { color: #f43f5e; font-weight: bold; }
+        .math-title { color: #eab308; font-weight: bold; }
         .math-code { color: #38bdf8; }
     </style>
 </head>
@@ -149,8 +200,8 @@
 
 <div class="container">
     <header>
-        <h1>Lotka-Volterra Population Simulator</h1>
-        <p class="subtitle">Multi-Variable Forward Euler Simulation Loop (Garfinkel Chapter 1)</p>
+        <h1>Shark-Tuna Population Simulator</h1>
+        <p class="subtitle">Forward Euler State Integration Engine (Garfinkel Chapter 1)</p>
     </header>
 
     <div class="grid">
@@ -160,71 +211,76 @@
             <div class="control-group">
                 <label for="p-tuna-init">Initial Tuna Population (T₀)</label>
                 <div class="slider-container">
-                    <input type="range" id="p-tuna-init" min="5" max="100" value="30">
-                    <span class="value-display" id="v-tuna-init">30</span>
+                    <input type="range" id="p-tuna-init" min="10" max="150" value="60">
+                    <span class="value-display" id="v-tuna-init">60</span>
                 </div>
             </div>
 
             <div class="control-group">
                 <label for="p-sharks-init">Initial Shark Population (S₀)</label>
                 <div class="slider-container">
-                    <input type="range" id="p-sharks-init" min="5" max="100" value="10">
-                    <span class="value-display" id="v-sharks-init">10</span>
+                    <input type="range" id="p-sharks-init" min="5" max="100" value="20">
+                    <span class="value-display" id="v-sharks-init">20</span>
                 </div>
             </div>
 
             <div class="control-group">
                 <label for="p-tuna-birth">Tuna Birth Rate (a)</label>
-                <span class="label-desc">T' growth factor without predators</span>
+                <span class="label-desc">Growth factor without predators</span>
                 <div class="slider-container">
-                    <input type="range" id="p-tuna-birth" min="0.05" max="1.00" step="0.05" value="0.50">
-                    <span class="value-display" id="v-tuna-birth">0.50</span>
+                    <input type="range" id="p-tuna-birth" min="0.10" max="1.50" step="0.05" value="0.70">
+                    <span class="value-display" id="v-tuna-birth">0.70</span>
                 </div>
             </div>
 
             <div class="control-group">
                 <label for="p-hunt">Hunting Efficiency (b)</label>
-                <span class="label-desc">Collision value coefficient (ST)</span>
+                <span class="label-desc">Collision coefficient (ST multiplication)</span>
                 <div class="slider-container">
-                    <input type="range" id="p-hunt" min="0.01" max="0.10" step="0.01" value="0.03">
-                    <span class="value-display" id="v-hunt">0.03</span>
+                    <input type="range" id="p-hunt" min="0.01" max="0.10" step="0.01" value="0.02">
+                    <span class="value-display" id="v-hunt">0.02</span>
                 </div>
             </div>
 
             <div class="control-group">
                 <label for="p-shark-death">Shark Death Rate (d)</label>
-                <span class="label-desc">Natural attrition rate of predators</span>
+                <span class="label-desc">Natural attrition of predators</span>
                 <div class="slider-container">
-                    <input type="range" id="p-shark-death" min="0.05" max="1.00" step="0.05" value="0.30">
-                    <span class="value-display" id="v-shark-death">0.30</span>
+                    <input type="range" id="p-shark-death" min="0.10" max="1.50" step="0.05" value="0.50">
+                    <span class="value-display" id="v-shark-death">0.50</span>
                 </div>
             </div>
+
+            <button class="submit-btn" id="runBtn">Run Simulation</button>
         </div>
 
         <div class="card">
             <h2>Ecosystem Oscillations Over Time</h2>
-            <div class="chart-container">
-                <canvas id="populationChart"></canvas>
+            <div class="chart-wrapper">
+                <canvas id="customCanvas" width="700" height="380"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-color" style="background-color: #0ea5e9;"></div>Tuna (Prey)</div>
+                <div class="legend-item"><div class="legend-color" style="background-color: #f43f5e;"></div>Sharks (Predators)</div>
             </div>
         </div>
     </div>
 
     <div class="math-box">
-        <span class="math-title">// Live Forward Euler Simulation Loop Executed inside Browser:</span><br>
+        <span class="math-title">// Forward Euler Mathematical State Engine:</span><br>
         <span class="math-code">
-            Looping from t = 0 to 50 using dt = 0.05...<br>
-            Instantaneous Vector Slopes: <br>
+            Execution status: <span id="math-status" style="color: #65a30d; font-weight: bold;">Ready</span><br>
+            System of Equations:<br>
             &nbsp;&nbsp;T' = (a * T) - (b * S * T)<br>
             &nbsp;&nbsp;S' = (b * S * T) - (d * S)<br>
-            Simultaneous Forward Step Updates:<br>
-            &nbsp;&nbsp;Next Tuna: T_new = T + (dt * T')<br>
-            &nbsp;&nbsp;Next Shark: S_new = S + (dt * S')
+            Simultaneous Forward Step Execution:<br>
+            &nbsp;&nbsp;T_next = T + (dt * T') &nbsp;&nbsp;|&nbsp;&nbsp; S_next = S + (dt * S')
         </span>
     </div>
 </div>
 
 <script>
-    // Link UI Sliders
+    // Link UI Sliders and Numbers
     const inTunaInit = document.getElementById('p-tuna-init');
     const inSharkInit = document.getElementById('p-sharks-init');
     const inTunaBirth = document.getElementById('p-tuna-birth');
@@ -237,110 +293,147 @@
     const vHunt = document.getElementById('v-hunt');
     const vSharkDeath = document.getElementById('v-shark-death');
 
-    // Setup and Configure the Chart.js canvas instance
-    const ctx = document.getElementById('populationChart').getContext('2d');
-    let populationChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [], // Time axis points
-            datasets: [
-                {
-                    label: 'Tuna Population (Prey)',
-                    borderColor: '#0ea5e9',
-                    backgroundColor: 'rgba(14, 165, 233, 0.1)',
-                    data: [],
-                    borderWidth: 3,
-                    pointRadius: 0 // Hide points for a smoother visual line
-                },
-                {
-                    label: 'Shark Population (Predator)',
-                    borderColor: '#f43f5e',
-                    backgroundColor: 'rgba(244, 63, 94, 0.1)',
-                    data: [],
-                    borderWidth: 3,
-                    pointRadius: 0
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: { title: { display: true, text: 'Time Units (t)' } },
-                y: { title: { display: true, text: 'Population Count' }, min: 0 }
-            }
-        }
-    });
+    const runBtn = document.getElementById('runBtn');
+    const mathStatus = document.getElementById('math-status');
 
-    // Run Forward Euler Simulation and Refresh Chart
-    function runSimulation() {
-        // Read active parameters from sliders
+    const canvas = document.getElementById('customCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Simple visual updates just to change text badges as you drag sliders
+    function updateTextBadges() {
+        vTunaInit.innerText = inTunaInit.value;
+        vSharkInit.innerText = inSharkInit.value;
+        vTunaBirth.innerText = parseFloat(inTunaBirth.value).toFixed(2);
+        vHunt.innerText = parseFloat(inHunt.value).toFixed(2);
+        vSharkDeath.innerText = parseFloat(inSharkDeath.value).toFixed(2);
+        mathStatus.innerText = "Parameters modified. Click 'Run Simulation' to compute from t=0.";
+        mathStatus.style.color = "#d97706"; // Alert color orange
+    }
+
+    // Core Calculation Routine triggered ONLY by the button click
+    function calculateAndDraw() {
+        // Clear status alert
+        mathStatus.innerText = "Simulation plotted starting from t=0 successfully!";
+        mathStatus.style.color = "#16a34a"; // Green active indicator
+
+        // Read Sliders variables 
         let T = parseFloat(inTunaInit.value);
         let S = parseFloat(inSharkInit.value);
         const a = parseFloat(inTunaBirth.value);
         const b = parseFloat(inHunt.value);
         const d = parseFloat(inSharkDeath.value);
 
-        // Print slider values to page display badges
-        vTunaInit.innerText = T;
-        vSharkInit.innerText = S;
-        vTunaBirth.innerText = a.toFixed(2);
-        vHunt.innerText = b.toFixed(2);
-        vSharkDeath.innerText = d.toFixed(2);
-
-        // Simulation parameters
-        const dt = 0.05;      // Small time-slice window
-        const maxTime = 50;   // Run simulation up to 50 units of time
+        // Forward Euler Configuration Specs
+        const dt = 0.04;
+        const maxTime = 45;
         const totalSteps = maxTime / dt;
 
-        // Arrays to hold calculated coordinate data paths
-        let timeLabels = [];
-        let tunaData = [];
-        let sharkData = [];
+        // Reset tracking structures precisely to t=0 initial selections
+        let tunaPoints = [T];
+        let sharkPoints = [S];
+        let maxVal = Math.max(T, S);
 
-        // Seed initial step data
-        timeLabels.push(0);
-        tunaData.push(T);
-        sharkData.push(S);
-
-        // The Forward Euler iterative state engine loop
-        for (let step = 1; step <= totalSteps; step++) {
-            let currentTime = step * dt;
-
-            // 1. Calculate derivatives at the CURRENT location
+        // Run continuous integration loop calculation from t=0 forward
+        for (let i = 1; i <= totalSteps; i++) {
             let dT = (a * T) - (b * S * T);
             let dS = (b * S * T) - (d * S);
 
-            // 2. Step forward simultaneously using the calculated slopes
             T = T + (dt * dT);
             S = S + (dt * dS);
 
-            // Protection loop against negative populations or infinite explosions
+            // Floor truncation protection bounds
             if (T < 0) T = 0;
             if (S < 0) S = 0;
 
-            // Save calculated values to data stack (only record snapshots to keep rendering fast)
-            if (step % 2 === 0) { 
-                timeLabels.push(currentTime.toFixed(1));
-                tunaData.push(T);
-                sharkData.push(S);
-            }
+            tunaPoints.push(T);
+            sharkPoints.push(S);
+            
+            if (T > maxVal) maxVal = T;
+            if (S > maxVal) maxVal = S;
         }
 
-        // Inject computed vectors directly into Chart data fields and redraw
-        populationChart.data.labels = timeLabels;
-        populationChart.data.datasets[0].data = tunaData;
-        populationChart.data.datasets[1].data = sharkData;
-        populationChart.update();
+        maxVal = maxVal * 1.15; // Top headroom spacing padding
+
+        // Clear Canvas completely before drafting fresh vectors
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const paddingLeft = 50;
+        const paddingRight = 20;
+        const paddingTop = 20;
+        const paddingBottom = 40;
+
+        const graphWidth = canvas.width - paddingLeft - paddingRight;
+        const graphHeight = canvas.height - paddingTop - paddingBottom;
+
+        // Render visual grid line backgrounds
+        ctx.strokeStyle = '#f1f5f9';
+        ctx.lineWidth = 1;
+        for (let g = 0; g <= 4; g++) {
+            let yGrid = paddingTop + (graphHeight * g / 4);
+            ctx.beginPath();
+            ctx.moveTo(paddingLeft, yGrid);
+            ctx.lineTo(canvas.width - paddingRight, yGrid);
+            ctx.stroke();
+
+            // Render Y-Axis numeric population values
+            ctx.fillStyle = '#64748b';
+            ctx.font = '11px sans-serif';
+            ctx.textAlign = 'right';
+            let labelVal = maxVal - (maxVal * g / 4);
+            ctx.fillText(Math.round(labelVal), paddingLeft - 8, yGrid + 4);
+        }
+
+        // Line plotting sub-routine 
+        function drawLine(dataArray, color) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+
+            for (let i = 0; i < dataArray.length; i++) {
+                let x = paddingLeft + (i / dataArray.length) * graphWidth;
+                let y = paddingTop + graphHeight - (dataArray[i] / maxVal) * graphHeight;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+        }
+
+        // Plot Tuna Path (Blue) then Shark Path (Red) starting from baseline index points
+        drawLine(tunaPoints, '#0ea5e9');
+        drawLine(sharkPoints, '#f43f5e');
+
+        // Render solid outer graph bounding borders
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(paddingLeft, paddingTop);
+        ctx.lineTo(paddingLeft, canvas.height - paddingBottom);
+        ctx.lineTo(canvas.width - paddingRight, canvas.height - paddingBottom);
+        ctx.stroke();
+
+        // Label Horizontal Axis
+        ctx.fillStyle = '#64748b';
+        ctx.textAlign = 'center';
+        ctx.font = '12px sans-serif';
+        ctx.fillText("Continuous Timeline Units (t) calculated from initial seed t=0", paddingLeft + (graphWidth / 2), canvas.height - 10);
     }
 
-    // Attach real-time event listener hooks to all inputs
-    [inTunaInit, inSharkInit, inTunaBirth, inHunt, inSharkDeath].forEach(element => {
-        element.addEventListener('input', runSimulation);
+    // Attach dragging actions to update badges instantly as you slide parameters
+    [inTunaInit, inSharkInit, inTunaBirth, inHunt, inSharkDeath].forEach(item => {
+        item.addEventListener('input', updateTextBadges);
     });
 
-    // Initialize first execution cycle
-    runSimulation();
+    // Attach strict execution click hook to Submit Button
+    runBtn.addEventListener('click', calculateAndDraw);
+
+    // Initial setup pass so the graph has data when page opens
+    updateTextBadges();
+    calculateAndDraw();
 </script>
 
 </body>
