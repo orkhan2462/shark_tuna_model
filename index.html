@@ -1,440 +1,683 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shark-Tuna Euler Simulator</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-light: #dbeafe;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --border: #e2e8f0;
-            --accent: #f59e0b;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shark-Tuna Euler Simulator</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fbff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #dbe4f0;
+      --primary: #2563eb;
+      --primary-2: #dbeafe;
+      --tuna: #0ea5e9;
+      --shark: #f43f5e;
+      --success: #16a34a;
+      --warn: #d97706;
+      --radius: 16px;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+    }
 
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-            padding: 1.5rem;
-            margin: 0;
-        }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      background: linear-gradient(180deg, #f8fbff 0%, #f2f6fb 100%);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
 
-        header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
 
-        h1 {
-            color: #0f172a;
-            margin: 0 0 0.25rem 0;
-            font-size: 1.8rem;
-        }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 2vw, 2.4rem);
+      color: #0f172a;
+    }
 
-        p.subtitle {
-            color: #64748b;
-            font-size: 1rem;
-            margin: 0;
-        }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-        }
+    .layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
 
-        @media (min-width: 900px) {
-            .grid {
-                grid-template-columns: 350px 1fr;
-            }
-        }
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+      body { padding: 16px; }
+    }
 
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.25rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
-            display: flex;
-            flex-direction: column;
-        }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
 
-        .card h2 {
-            font-size: 1.15rem;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--bg);
-            padding-bottom: 0.5rem;
-            color: #334155;
-        }
+    .card h2 {
+      margin: 0 0 18px;
+      font-size: 1.2rem;
+      color: #243244;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eef3f8;
+    }
 
-        .control-group {
-            margin-bottom: 1rem;
-        }
+    .controls {
+      display: grid;
+      gap: 14px;
+    }
 
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            font-size: 0.9rem;
-        }
+    .control-group label {
+      display: block;
+      font-size: 0.96rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
 
-        .label-desc {
-            font-weight: normal;
-            color: #64748b;
-            font-size: 0.8rem;
-            display: block;
-            margin-bottom: 0.25rem;
-        }
+    .label-desc {
+      display: block;
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
 
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+    .slider-row {
+      display: grid;
+      grid-template-columns: 1fr 68px;
+      gap: 12px;
+      align-items: center;
+    }
 
-        input[type="range"] {
-            flex: 1;
-            height: 6px;
-            background: var(--border);
-            border-radius: 5px;
-            outline: none;
-        }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
 
-        .value-display {
-            font-family: monospace;
-            font-size: 0.9rem;
-            font-weight: bold;
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            min-width: 45px;
-            text-align: center;
-        }
+    .value-display {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: var(--primary-2);
+      color: var(--primary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
 
-        /* Submit Button Styling */
-        .submit-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: auto;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
 
-        .submit-btn:hover {
-            background-color: #1d4ed8;
-        }
+    button {
+      border: none;
+      border-radius: 12px;
+      min-height: 46px;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.2s ease, background-color 0.2s ease;
+    }
 
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
+    button:hover { opacity: 0.95; }
+    button:active { transform: scale(0.985); }
 
-        .chart-wrapper {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 10px;
-            position: relative;
-        }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #e2e8f0; color: #1e293b; }
+    .btn-danger { background: #fee2e2; color: #be123c; }
 
-        canvas {
-            display: block;
-            width: 100%;
-            height: 380px;
-            background: #ffffff;
-        }
+    .status-bar {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      border: 1px solid #e7eff8;
+      font-size: 0.93rem;
+      color: var(--muted);
+    }
 
-        .legend {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
+    .stat {
+      background: #f8fbff;
+      border: 1px solid #e6eef8;
+      border-radius: 12px;
+      padding: 10px;
+    }
 
-        .legend-color {
-            width: 16px;
-            height: 4px;
-            border-radius: 2px;
-        }
+    .stat-label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
 
-        .math-box {
-            background: #1e293b;
-            color: #f8fafc;
-            padding: 0.85rem;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            margin-top: 1.25rem;
-        }
-        .math-title { color: #eab308; font-weight: bold; }
-        .math-code { color: #38bdf8; }
-    </style>
+    .stat-value {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .chart-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .canvas-wrap {
+      background: #fff;
+      border: 1px solid #e7eef6;
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #fff;
+      border-radius: 10px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+      color: #334155;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-swatch {
+      width: 18px;
+      height: 4px;
+      border-radius: 999px;
+    }
+
+    .math-box {
+      margin-top: 20px;
+      background: #162232;
+      color: #dbeafe;
+      border-radius: 16px;
+      padding: 16px 18px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    .math-title { color: #fbbf24; font-weight: 800; }
+    .math-code { color: #7dd3fc; }
+  </style>
 </head>
 <body>
-
-<div class="container">
+  <div class="container">
     <header>
-        <h1>Shark-Tuna Population Simulator</h1>
-        <p class="subtitle">Forward Euler State Integration Engine (Garfinkel Chapter 1)</p>
+      <h1>Shark-Tuna Population Simulator</h1>
+      <p class="subtitle">Forward Euler integration with live drawnow-style plotting</p>
     </header>
 
-    <div class="grid">
-        <div class="card">
-            <h2>Initial Conditions & Rates</h2>
-            
-            <div class="control-group">
-                <label for="p-tuna-init">Initial Tuna Population (T₀)</label>
-                <div class="slider-container">
-                    <input type="range" id="p-tuna-init" min="10" max="150" value="60">
-                    <span class="value-display" id="v-tuna-init">60</span>
-                </div>
+    <div class="layout">
+      <section class="card">
+        <h2>Initial Conditions & Rates</h2>
+        <div class="controls">
+          <div class="control-group">
+            <label for="p-tuna-init">Initial Tuna Population (T₀)</label>
+            <div class="slider-row">
+              <input type="range" id="p-tuna-init" min="10" max="150" value="60">
+              <span class="value-display" id="v-tuna-init">60</span>
             </div>
+          </div>
 
-            <div class="control-group">
-                <label for="p-sharks-init">Initial Shark Population (S₀)</label>
-                <div class="slider-container">
-                    <input type="range" id="p-sharks-init" min="5" max="100" value="20">
-                    <span class="value-display" id="v-sharks-init">20</span>
-                </div>
+          <div class="control-group">
+            <label for="p-sharks-init">Initial Shark Population (S₀)</label>
+            <div class="slider-row">
+              <input type="range" id="p-sharks-init" min="5" max="100" value="20">
+              <span class="value-display" id="v-sharks-init">20</span>
             </div>
+          </div>
 
-            <div class="control-group">
-                <label for="p-tuna-birth">Tuna Birth Rate (a)</label>
-                <span class="label-desc">Growth factor without predators</span>
-                <div class="slider-container">
-                    <input type="range" id="p-tuna-birth" min="0.10" max="1.50" step="0.05" value="0.70">
-                    <span class="value-display" id="v-tuna-birth">0.70</span>
-                </div>
+          <div class="control-group">
+            <label for="p-tuna-birth">Tuna Birth Rate (a)</label>
+            <span class="label-desc">Growth factor without predators</span>
+            <div class="slider-row">
+              <input type="range" id="p-tuna-birth" min="0.10" max="1.50" step="0.05" value="0.70">
+              <span class="value-display" id="v-tuna-birth">0.70</span>
             </div>
+          </div>
 
-            <div class="control-group">
-                <label for="p-hunt">Hunting Efficiency (b)</label>
-                <span class="label-desc">Collision coefficient (ST multiplication)</span>
-                <div class="slider-container">
-                    <input type="range" id="p-hunt" min="0.01" max="0.10" step="0.01" value="0.02">
-                    <span class="value-display" id="v-hunt">0.02</span>
-                </div>
+          <div class="control-group">
+            <label for="p-hunt">Hunting Efficiency (b)</label>
+            <span class="label-desc">Collision coefficient (S × T)</span>
+            <div class="slider-row">
+              <input type="range" id="p-hunt" min="0.005" max="0.10" step="0.005" value="0.02">
+              <span class="value-display" id="v-hunt">0.02</span>
             </div>
+          </div>
 
-            <div class="control-group">
-                <label for="p-shark-death">Shark Death Rate (d)</label>
-                <span class="label-desc">Natural attrition of predators</span>
-                <div class="slider-container">
-                    <input type="range" id="p-shark-death" min="0.10" max="1.50" step="0.05" value="0.50">
-                    <span class="value-display" id="v-shark-death">0.50</span>
-                </div>
+          <div class="control-group">
+            <label for="p-shark-death">Shark Death Rate (d)</label>
+            <span class="label-desc">Natural attrition of predators</span>
+            <div class="slider-row">
+              <input type="range" id="p-shark-death" min="0.10" max="1.50" step="0.05" value="0.50">
+              <span class="value-display" id="v-shark-death">0.50</span>
             </div>
+          </div>
 
-            <button class="submit-btn" id="runBtn">Run Simulation</button>
+          <div class="control-group">
+            <label for="p-dt">Time Step (dt)</label>
+            <span class="label-desc">Euler integration step size</span>
+            <div class="slider-row">
+              <input type="range" id="p-dt" min="0.01" max="0.20" step="0.01" value="0.04">
+              <span class="value-display" id="v-dt">0.04</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="p-max-time">Simulation Length</label>
+            <span class="label-desc">Total time horizon</span>
+            <div class="slider-row">
+              <input type="range" id="p-max-time" min="10" max="100" step="5" value="45">
+              <span class="value-display" id="v-max-time">45</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="p-speed">Animation Speed</label>
+            <span class="label-desc">Euler steps drawn per frame</span>
+            <div class="slider-row">
+              <input type="range" id="p-speed" min="1" max="20" step="1" value="3">
+              <span class="value-display" id="v-speed">3</span>
+            </div>
+          </div>
         </div>
 
-        <div class="card">
-            <h2>Ecosystem Oscillations Over Time</h2>
-            <div class="chart-wrapper">
-                <canvas id="customCanvas" width="700" height="380"></canvas>
-            </div>
-            <div class="legend">
-                <div class="legend-item"><div class="legend-color" style="background-color: #0ea5e9;"></div>Tuna (Prey)</div>
-                <div class="legend-item"><div class="legend-color" style="background-color: #f43f5e;"></div>Sharks (Predators)</div>
-            </div>
+        <div class="button-row">
+          <button class="btn-primary" id="runBtn">Run</button>
+          <button class="btn-secondary" id="pauseBtn">Pause</button>
+          <button class="btn-danger" id="resetBtn">Reset</button>
         </div>
+
+        <div class="status-bar" id="statusBar">Ready. Adjust parameters and run the simulation.</div>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-label">Time</span>
+            <span class="stat-value" id="stat-time">0.00</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Tuna</span>
+            <span class="stat-value" id="stat-tuna">60.00</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Sharks</span>
+            <span class="stat-value" id="stat-shark">20.00</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card chart-card">
+        <h2>Ecosystem Oscillations Over Time</h2>
+        <div class="canvas-wrap">
+          <canvas id="customCanvas" width="860" height="430"></canvas>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch" style="background:#0ea5e9"></span>Tuna (Prey)</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:#f43f5e"></span>Sharks (Predators)</div>
+        </div>
+      </section>
     </div>
 
     <div class="math-box">
-        <span class="math-title">// Forward Euler Mathematical State Engine:</span><br>
-        <span class="math-code">
-            Execution status: <span id="math-status" style="color: #65a30d; font-weight: bold;">Ready</span><br>
-            System of Equations:<br>
-            &nbsp;&nbsp;T' = (a * T) - (b * S * T)<br>
-            &nbsp;&nbsp;S' = (b * S * T) - (d * S)<br>
-            Simultaneous Forward Step Execution:<br>
-            &nbsp;&nbsp;T_next = T + (dt * T') &nbsp;&nbsp;|&nbsp;&nbsp; S_next = S + (dt * S')
-        </span>
+      <span class="math-title">// Forward Euler Mathematical State Engine</span><br><br>
+      <span class="math-code">
+        Status: <span id="math-status" style="color:#86efac;font-weight:700;">Ready</span><br>
+        System of equations:<br>
+        &nbsp;&nbsp;T' = (a · T) - (b · S · T)<br>
+        &nbsp;&nbsp;S' = (b · S · T) - (d · S)<br><br>
+        Forward update:<br>
+        &nbsp;&nbsp;T_next = T + dt · T'<br>
+        &nbsp;&nbsp;S_next = S + dt · S'
+      </span>
     </div>
-</div>
+  </div>
 
-<script>
-    // Link UI Sliders and Numbers
-    const inTunaInit = document.getElementById('p-tuna-init');
-    const inSharkInit = document.getElementById('p-sharks-init');
-    const inTunaBirth = document.getElementById('p-tuna-birth');
-    const inHunt = document.getElementById('p-hunt');
-    const inSharkDeath = document.getElementById('p-shark-death');
+  <script>
+    const controls = {
+      tunaInit: document.getElementById('p-tuna-init'),
+      sharkInit: document.getElementById('p-sharks-init'),
+      tunaBirth: document.getElementById('p-tuna-birth'),
+      hunt: document.getElementById('p-hunt'),
+      sharkDeath: document.getElementById('p-shark-death'),
+      dt: document.getElementById('p-dt'),
+      maxTime: document.getElementById('p-max-time'),
+      speed: document.getElementById('p-speed')
+    };
 
-    const vTunaInit = document.getElementById('v-tuna-init');
-    const vSharkInit = document.getElementById('v-sharks-init');
-    const vTunaBirth = document.getElementById('v-tuna-birth');
-    const vHunt = document.getElementById('v-hunt');
-    const vSharkDeath = document.getElementById('v-shark-death');
+    const displays = {
+      tunaInit: document.getElementById('v-tuna-init'),
+      sharkInit: document.getElementById('v-sharks-init'),
+      tunaBirth: document.getElementById('v-tuna-birth'),
+      hunt: document.getElementById('v-hunt'),
+      sharkDeath: document.getElementById('v-shark-death'),
+      dt: document.getElementById('v-dt'),
+      maxTime: document.getElementById('v-max-time'),
+      speed: document.getElementById('v-speed')
+    };
 
     const runBtn = document.getElementById('runBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const statusBar = document.getElementById('statusBar');
     const mathStatus = document.getElementById('math-status');
-
+    const statTime = document.getElementById('stat-time');
+    const statTuna = document.getElementById('stat-tuna');
+    const statShark = document.getElementById('stat-shark');
     const canvas = document.getElementById('customCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Simple visual updates just to change text badges as you drag sliders
+    let sim = null;
+    let animationId = null;
+    let isPaused = false;
+
     function updateTextBadges() {
-        vTunaInit.innerText = inTunaInit.value;
-        vSharkInit.innerText = inSharkInit.value;
-        vTunaBirth.innerText = parseFloat(inTunaBirth.value).toFixed(2);
-        vHunt.innerText = parseFloat(inHunt.value).toFixed(2);
-        vSharkDeath.innerText = parseFloat(inSharkDeath.value).toFixed(2);
-        mathStatus.innerText = "Parameters modified. Click 'Run Simulation' to compute from t=0.";
-        mathStatus.style.color = "#d97706"; // Alert color orange
+      displays.tunaInit.textContent = controls.tunaInit.value;
+      displays.sharkInit.textContent = controls.sharkInit.value;
+      displays.tunaBirth.textContent = Number(controls.tunaBirth.value).toFixed(2);
+      displays.hunt.textContent = Number(controls.hunt.value).toFixed(3).replace(/0$/, '');
+      displays.sharkDeath.textContent = Number(controls.sharkDeath.value).toFixed(2);
+      displays.dt.textContent = Number(controls.dt.value).toFixed(2);
+      displays.maxTime.textContent = controls.maxTime.value;
+      displays.speed.textContent = controls.speed.value;
+
+      if (!sim || !sim.running) {
+        setStatus("Parameters modified. Click Run to start from t = 0.", '#d97706');
+      }
+      syncStatsPreview();
     }
 
-    // Core Calculation Routine triggered ONLY by the button click
-    function calculateAndDraw() {
-        // Clear status alert
-        mathStatus.innerText = "Simulation plotted starting from t=0 successfully!";
-        mathStatus.style.color = "#16a34a"; // Green active indicator
+    function setStatus(text, color) {
+      statusBar.textContent = text;
+      statusBar.style.color = color;
+      mathStatus.textContent = text;
+      mathStatus.style.color = color;
+    }
 
-        // Read Sliders variables 
-        let T = parseFloat(inTunaInit.value);
-        let S = parseFloat(inSharkInit.value);
-        const a = parseFloat(inTunaBirth.value);
-        const b = parseFloat(inHunt.value);
-        const d = parseFloat(inSharkDeath.value);
+    function syncStatsPreview() {
+      statTime.textContent = '0.00';
+      statTuna.textContent = Number(controls.tunaInit.value).toFixed(2);
+      statShark.textContent = Number(controls.sharkInit.value).toFixed(2);
+    }
 
-        // Forward Euler Configuration Specs
-        const dt = 0.04;
-        const maxTime = 45;
-        const totalSteps = maxTime / dt;
+    function createSimulation() {
+      const T0 = Number(controls.tunaInit.value);
+      const S0 = Number(controls.sharkInit.value);
+      const dt = Number(controls.dt.value);
+      const maxTime = Number(controls.maxTime.value);
 
-        // Reset tracking structures precisely to t=0 initial selections
-        let tunaPoints = [T];
-        let sharkPoints = [S];
-        let maxVal = Math.max(T, S);
+      return {
+        T: T0,
+        S: S0,
+        a: Number(controls.tunaBirth.value),
+        b: Number(controls.hunt.value),
+        d: Number(controls.sharkDeath.value),
+        dt,
+        maxTime,
+        stepsPerFrame: Number(controls.speed.value),
+        time: 0,
+        step: 0,
+        totalSteps: Math.max(1, Math.floor(maxTime / dt)),
+        tunaPoints: [T0],
+        sharkPoints: [S0],
+        timePoints: [0],
+        maxVal: Math.max(T0, S0, 1),
+        running: true
+      };
+    }
 
-        // Run continuous integration loop calculation from t=0 forward
-        for (let i = 1; i <= totalSteps; i++) {
-            let dT = (a * T) - (b * S * T);
-            let dS = (b * S * T) - (d * S);
+    function updateStats() {
+      if (!sim) return;
+      statTime.textContent = sim.time.toFixed(2);
+      statTuna.textContent = sim.T.toFixed(2);
+      statShark.textContent = sim.S.toFixed(2);
+    }
 
-            T = T + (dt * dT);
-            S = S + (dt * dS);
-
-            // Floor truncation protection bounds
-            if (T < 0) T = 0;
-            if (S < 0) S = 0;
-
-            tunaPoints.push(T);
-            sharkPoints.push(S);
-            
-            if (T > maxVal) maxVal = T;
-            if (S > maxVal) maxVal = S;
+    function stepSimulation(state) {
+      for (let n = 0; n < state.stepsPerFrame; n++) {
+        if (state.step >= state.totalSteps) {
+          state.running = false;
+          return;
         }
 
-        maxVal = maxVal * 1.15; // Top headroom spacing padding
+        const dT = (state.a * state.T) - (state.b * state.S * state.T);
+        const dS = (state.b * state.S * state.T) - (state.d * state.S);
 
-        // Clear Canvas completely before drafting fresh vectors
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        state.T = Math.max(0, state.T + state.dt * dT);
+        state.S = Math.max(0, state.S + state.dt * dS);
+        state.time += state.dt;
+        state.step += 1;
 
-        const paddingLeft = 50;
-        const paddingRight = 20;
-        const paddingTop = 20;
-        const paddingBottom = 40;
+        state.tunaPoints.push(state.T);
+        state.sharkPoints.push(state.S);
+        state.timePoints.push(state.time);
+        state.maxVal = Math.max(state.maxVal, state.T, state.S);
+      }
+    }
 
-        const graphWidth = canvas.width - paddingLeft - paddingRight;
-        const graphHeight = canvas.height - paddingTop - paddingBottom;
+    function drawAxes(maxVal, maxTime) {
+      const pad = { left: 58, right: 20, top: 18, bottom: 46 };
+      const w = canvas.width - pad.left - pad.right;
+      const h = canvas.height - pad.top - pad.bottom;
 
-        // Render visual grid line backgrounds
-        ctx.strokeStyle = '#f1f5f9';
-        ctx.lineWidth = 1;
-        for (let g = 0; g <= 4; g++) {
-            let yGrid = paddingTop + (graphHeight * g / 4);
-            ctx.beginPath();
-            ctx.moveTo(paddingLeft, yGrid);
-            ctx.lineTo(canvas.width - paddingRight, yGrid);
-            ctx.stroke();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Render Y-Axis numeric population values
-            ctx.fillStyle = '#64748b';
-            ctx.font = '11px sans-serif';
-            ctx.textAlign = 'right';
-            let labelVal = maxVal - (maxVal * g / 4);
-            ctx.fillText(Math.round(labelVal), paddingLeft - 8, yGrid + 4);
-        }
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Line plotting sub-routine 
-        function drawLine(dataArray, color) {
-            ctx.beginPath();
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 3;
-            ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#eef2f7';
+      ctx.lineWidth = 1;
 
-            for (let i = 0; i < dataArray.length; i++) {
-                let x = paddingLeft + (i / dataArray.length) * graphWidth;
-                let y = paddingTop + graphHeight - (dataArray[i] / maxVal) * graphHeight;
-
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            }
-            ctx.stroke();
-        }
-
-        // Plot Tuna Path (Blue) then Shark Path (Red) starting from baseline index points
-        drawLine(tunaPoints, '#0ea5e9');
-        drawLine(sharkPoints, '#f43f5e');
-
-        // Render solid outer graph bounding borders
-        ctx.strokeStyle = '#cbd5e1';
-        ctx.lineWidth = 2;
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.top + (h * i / 4);
         ctx.beginPath();
-        ctx.moveTo(paddingLeft, paddingTop);
-        ctx.lineTo(paddingLeft, canvas.height - paddingBottom);
-        ctx.lineTo(canvas.width - paddingRight, canvas.height - paddingBottom);
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(canvas.width - pad.right, y);
         ctx.stroke();
 
-        // Label Horizontal Axis
+        const labelVal = maxVal - (maxVal * i / 4);
         ctx.fillStyle = '#64748b';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(Math.round(labelVal), pad.left - 8, y + 4);
+      }
+
+      for (let i = 0; i <= 6; i++) {
+        const x = pad.left + (w * i / 6);
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, canvas.height - pad.bottom);
+        ctx.stroke();
+
         ctx.textAlign = 'center';
-        ctx.font = '12px sans-serif';
-        ctx.fillText("Continuous Timeline Units (t) calculated from initial seed t=0", paddingLeft + (graphWidth / 2), canvas.height - 10);
+        ctx.fillStyle = '#64748b';
+        ctx.fillText((maxTime * i / 6).toFixed(0), x, canvas.height - pad.bottom + 18);
+      }
+
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top);
+      ctx.lineTo(pad.left, canvas.height - pad.bottom);
+      ctx.lineTo(canvas.width - pad.right, canvas.height - pad.bottom);
+      ctx.stroke();
+
+      ctx.fillStyle = '#475569';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Time', pad.left + w / 2, canvas.height - 10);
+
+      ctx.save();
+      ctx.translate(16, pad.top + h / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('Population', 0, 0);
+      ctx.restore();
+
+      return { ...pad, w, h };
     }
 
-    // Attach dragging actions to update badges instantly as you slide parameters
-    [inTunaInit, inSharkInit, inTunaBirth, inHunt, inSharkDeath].forEach(item => {
-        item.addEventListener('input', updateTextBadges);
+    function drawLine(values, times, color, maxVal, maxTime, box) {
+      if (values.length < 2) return;
+
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+
+      for (let i = 0; i < values.length; i++) {
+        const x = box.left + (times[i] / maxTime) * box.w;
+        const y = box.top + box.h - (values[i] / maxVal) * box.h;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    function drawCurrentMarker(value, time, color, maxVal, maxTime, box) {
+      const x = box.left + (time / maxTime) * box.w;
+      const y = box.top + box.h - (value / maxVal) * box.h;
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawChart(state) {
+      const maxVal = Math.max(10, state.maxVal * 1.15);
+      const box = drawAxes(maxVal, state.maxTime);
+      drawLine(state.tunaPoints, state.timePoints, '#0ea5e9', maxVal, state.maxTime, box);
+      drawLine(state.sharkPoints, state.timePoints, '#f43f5e', maxVal, state.maxTime, box);
+      drawCurrentMarker(state.T, state.time, '#0ea5e9', maxVal, state.maxTime, box);
+      drawCurrentMarker(state.S, state.time, '#f43f5e', maxVal, state.maxTime, box);
+    }
+
+    function animate() {
+      if (!sim || isPaused) return;
+
+      stepSimulation(sim);
+      drawChart(sim);
+      updateStats();
+
+      if (sim.running) {
+        setStatus(`Running simulation... t = ${sim.time.toFixed(2)}`, '#2563eb');
+        animationId = requestAnimationFrame(animate);
+      } else {
+        setStatus(`Simulation complete. Final time = ${sim.time.toFixed(2)}`, '#16a34a');
+        animationId = null;
+      }
+    }
+
+    function startSimulation() {
+      if (animationId) cancelAnimationFrame(animationId);
+      isPaused = false;
+      pauseBtn.textContent = 'Pause';
+      sim = createSimulation();
+      drawChart(sim);
+      updateStats();
+      setStatus('Running simulation... t = 0.00', '#2563eb');
+      animationId = requestAnimationFrame(animate);
+    }
+
+    function togglePause() {
+      if (!sim) return;
+      if (!sim.running) return;
+
+      isPaused = !isPaused;
+      if (isPaused) {
+        if (animationId) cancelAnimationFrame(animationId);
+        animationId = null;
+        pauseBtn.textContent = 'Resume';
+        setStatus(`Paused at t = ${sim.time.toFixed(2)}`, '#d97706');
+      } else {
+        pauseBtn.textContent = 'Pause';
+        setStatus(`Running simulation... t = ${sim.time.toFixed(2)}`, '#2563eb');
+        animationId = requestAnimationFrame(animate);
+      }
+    }
+
+    function resetSimulation() {
+      if (animationId) cancelAnimationFrame(animationId);
+      animationId = null;
+      isPaused = false;
+      pauseBtn.textContent = 'Pause';
+      sim = null;
+      syncStatsPreview();
+      setStatus('Reset complete. Ready to run from t = 0.', '#16a34a');
+      drawStaticPreview();
+    }
+
+    function drawStaticPreview() {
+      const preview = {
+        T: Number(controls.tunaInit.value),
+        S: Number(controls.sharkInit.value),
+        maxVal: Math.max(Number(controls.tunaInit.value), Number(controls.sharkInit.value), 10),
+        maxTime: Number(controls.maxTime.value),
+        tunaPoints: [Number(controls.tunaInit.value)],
+        sharkPoints: [Number(controls.sharkInit.value)],
+        timePoints: [0],
+        time: 0
+      };
+      drawChart(preview);
+    }
+
+    Object.values(controls).forEach(control => {
+      control.addEventListener('input', updateTextBadges);
     });
 
-    // Attach strict execution click hook to Submit Button
-    runBtn.addEventListener('click', calculateAndDraw);
+    runBtn.addEventListener('click', startSimulation);
+    pauseBtn.addEventListener('click', togglePause);
+    resetBtn.addEventListener('click', resetSimulation);
 
-    // Initial setup pass so the graph has data when page opens
     updateTextBadges();
-    calculateAndDraw();
-</script>
-
+    drawStaticPreview();
+  </script>
 </body>
 </html>
