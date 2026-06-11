@@ -18,52 +18,60 @@
       --shark: #f43f5e;
       --success: #16a34a;
       --warn: #d97706;
-      --radius: 16px;
-      --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+      --radius: 14px;
+      --shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
     }
 
     * { box-sizing: border-box; }
-    body {
+
+    html, body {
+      height: 100%;
       margin: 0;
+    }
+
+    body {
       font-family: Inter, system-ui, -apple-system, sans-serif;
       background: linear-gradient(180deg, #f8fbff 0%, #f2f6fb 100%);
       color: var(--text);
-      line-height: 1.5;
-      padding: 24px;
+      line-height: 1.35;
+      padding: 10px;
+      overflow: hidden;
     }
 
     .container {
-      max-width: 1180px;
+      max-width: 1280px;
       margin: 0 auto;
+      height: calc(100vh - 20px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 0;
+      flex: 0 0 auto;
     }
 
     h1 {
-      margin: 0 0 8px;
-      font-size: clamp(1.8rem, 2vw, 2.4rem);
+      margin: 0 0 4px;
+      font-size: clamp(1.35rem, 1.8vw, 1.9rem);
       color: #0f172a;
     }
 
     .subtitle {
       margin: 0;
       color: var(--muted);
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    @media (max-width: 960px) {
-      .layout { grid-template-columns: 1fr; }
-      body { padding: 16px; }
+      grid-template-columns: 330px 1fr;
+      gap: 12px;
+      align-items: stretch;
+      flex: 1 1 auto;
+      min-height: 0;
     }
 
     .card {
@@ -71,40 +79,50 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 20px;
+      padding: 14px;
+      min-height: 0;
+      overflow: hidden;
     }
 
     .card h2 {
-      margin: 0 0 18px;
-      font-size: 1.2rem;
+      margin: 0 0 10px;
+      font-size: 1rem;
       color: #243244;
-      padding-bottom: 10px;
+      padding-bottom: 8px;
       border-bottom: 1px solid #eef3f8;
+    }
+
+    .control-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: auto;
+      min-height: 0;
     }
 
     .controls {
       display: grid;
-      gap: 14px;
+      gap: 8px;
     }
 
     .control-group label {
       display: block;
-      font-size: 0.96rem;
+      font-size: 0.84rem;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .label-desc {
       display: block;
-      font-size: 0.83rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .slider-row {
       display: grid;
-      grid-template-columns: 1fr 68px;
-      gap: 12px;
+      grid-template-columns: 1fr 56px;
+      gap: 8px;
       align-items: center;
     }
 
@@ -118,29 +136,29 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
-      padding: 6px 8px;
-      border-radius: 10px;
+      min-height: 32px;
+      padding: 4px 6px;
+      border-radius: 8px;
       background: var(--primary-2);
       color: var(--primary);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.82rem;
     }
 
     .button-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 10px;
+      gap: 8px;
+      margin-top: 2px;
     }
 
     button {
       border: none;
-      border-radius: 12px;
-      min-height: 46px;
-      padding: 12px 14px;
-      font-size: 0.95rem;
+      border-radius: 10px;
+      min-height: 38px;
+      padding: 8px 10px;
+      font-size: 0.86rem;
       font-weight: 800;
       cursor: pointer;
       transition: transform 0.12s ease, opacity 0.2s ease, background-color 0.2s ease;
@@ -154,70 +172,72 @@
     .btn-danger { background: #fee2e2; color: #be123c; }
 
     .status-bar {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
       background: var(--surface-2);
       border: 1px solid #e7eff8;
-      font-size: 0.93rem;
+      font-size: 0.8rem;
       color: var(--muted);
     }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 14px;
+      gap: 8px;
     }
 
     .stat {
       background: #f8fbff;
       border: 1px solid #e6eef8;
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: 10px;
+      padding: 8px;
     }
 
     .stat-label {
       display: block;
-      font-size: 0.78rem;
+      font-size: 0.7rem;
       color: var(--muted);
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .stat-value {
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-weight: 700;
       color: #0f172a;
+      font-size: 0.84rem;
     }
 
     .chart-card {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      min-height: 0;
     }
 
     .canvas-wrap {
       background: #fff;
       border: 1px solid #e7eef6;
-      border-radius: 14px;
-      padding: 10px;
+      border-radius: 12px;
+      padding: 6px;
+      min-height: 0;
+      display: flex;
     }
 
     canvas {
       width: 100%;
-      height: auto;
+      height: 100%;
       display: block;
       background: #fff;
-      border-radius: 10px;
+      border-radius: 8px;
     }
 
     .legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 18px;
+      gap: 14px;
       justify-content: center;
       color: #334155;
-      font-size: 0.92rem;
+      font-size: 0.82rem;
       font-weight: 700;
     }
 
@@ -234,18 +254,48 @@
     }
 
     .math-box {
-      margin-top: 20px;
+      margin-top: 2px;
       background: #162232;
       color: #dbeafe;
-      border-radius: 16px;
-      padding: 16px 18px;
+      border-radius: 12px;
+      padding: 10px 12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.9rem;
+      font-size: 0.74rem;
+      line-height: 1.35;
       overflow-x: auto;
     }
 
-    .math-title { color: #fbbf24; font-weight: 800; }
-    .math-code { color: #7dd3fc; }
+    .math-title {
+      color: #fbbf24;
+      font-weight: 800;
+    }
+
+    .math-code {
+      color: #7dd3fc;
+    }
+
+    @media (max-width: 960px) {
+      body {
+        padding: 12px;
+        overflow: auto;
+      }
+
+      .container {
+        height: auto;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .control-card {
+        overflow: visible;
+      }
+
+      .canvas-wrap {
+        min-height: 280px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -256,8 +306,9 @@
     </header>
 
     <div class="layout">
-      <section class="card">
+      <section class="card control-card">
         <h2>Initial Conditions & Rates</h2>
+
         <div class="controls">
           <div class="control-group">
             <label for="p-tuna-init">Initial Tuna Population (T₀)</label>
@@ -352,31 +403,31 @@
             <span class="stat-value" id="stat-shark">20.00</span>
           </div>
         </div>
+
+        <div class="math-box">
+          <span class="math-title">// Forward Euler Mathematical State Engine</span><br><br>
+          <span class="math-code">
+            Status: <span id="math-status" style="color:#86efac;font-weight:700;">Ready</span><br>
+            System of equations:<br>
+            &nbsp;&nbsp;T' = (a · T) - (b · S · T)<br>
+            &nbsp;&nbsp;S' = (b · S · T) - (d · S)<br><br>
+            Forward update:<br>
+            &nbsp;&nbsp;T_next = T + dt · T'<br>
+            &nbsp;&nbsp;S_next = S + dt · S'
+          </span>
+        </div>
       </section>
 
       <section class="card chart-card">
         <h2>Ecosystem Oscillations Over Time</h2>
         <div class="canvas-wrap">
-          <canvas id="customCanvas" width="860" height="430"></canvas>
+          <canvas id="customCanvas" width="860" height="300"></canvas>
         </div>
         <div class="legend">
           <div class="legend-item"><span class="legend-swatch" style="background:#0ea5e9"></span>Tuna (Prey)</div>
           <div class="legend-item"><span class="legend-swatch" style="background:#f43f5e"></span>Sharks (Predators)</div>
         </div>
       </section>
-    </div>
-
-    <div class="math-box">
-      <span class="math-title">// Forward Euler Mathematical State Engine</span><br><br>
-      <span class="math-code">
-        Status: <span id="math-status" style="color:#86efac;font-weight:700;">Ready</span><br>
-        System of equations:<br>
-        &nbsp;&nbsp;T' = (a · T) - (b · S · T)<br>
-        &nbsp;&nbsp;S' = (b · S · T) - (d · S)<br><br>
-        Forward update:<br>
-        &nbsp;&nbsp;T_next = T + dt · T'<br>
-        &nbsp;&nbsp;S_next = S + dt · S'
-      </span>
     </div>
   </div>
 
@@ -432,6 +483,7 @@
         setStatus("Parameters modified. Click Run to start from t = 0.", '#d97706');
       }
       syncStatsPreview();
+      drawStaticPreview();
     }
 
     function setStatus(text, color) {
@@ -503,12 +555,11 @@
     }
 
     function drawAxes(maxVal, maxTime) {
-      const pad = { left: 58, right: 20, top: 18, bottom: 46 };
+      const pad = { left: 54, right: 16, top: 14, bottom: 36 };
       const w = canvas.width - pad.left - pad.right;
       const h = canvas.height - pad.top - pad.bottom;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -524,9 +575,9 @@
 
         const labelVal = maxVal - (maxVal * i / 4);
         ctx.fillStyle = '#64748b';
-        ctx.font = '11px sans-serif';
+        ctx.font = '10px sans-serif';
         ctx.textAlign = 'right';
-        ctx.fillText(Math.round(labelVal), pad.left - 8, y + 4);
+        ctx.fillText(Math.round(labelVal), pad.left - 6, y + 3);
       }
 
       for (let i = 0; i <= 6; i++) {
@@ -538,7 +589,7 @@
 
         ctx.textAlign = 'center';
         ctx.fillStyle = '#64748b';
-        ctx.fillText((maxTime * i / 6).toFixed(0), x, canvas.height - pad.bottom + 18);
+        ctx.fillText((maxTime * i / 6).toFixed(0), x, canvas.height - pad.bottom + 14);
       }
 
       ctx.strokeStyle = '#94a3b8';
@@ -550,12 +601,12 @@
       ctx.stroke();
 
       ctx.fillStyle = '#475569';
-      ctx.font = '12px sans-serif';
+      ctx.font = '11px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Time', pad.left + w / 2, canvas.height - 10);
+      ctx.fillText('Time', pad.left + w / 2, canvas.height - 6);
 
       ctx.save();
-      ctx.translate(16, pad.top + h / 2);
+      ctx.translate(14, pad.top + h / 2);
       ctx.rotate(-Math.PI / 2);
       ctx.fillText('Population', 0, 0);
       ctx.restore();
@@ -568,7 +619,7 @@
 
       ctx.beginPath();
       ctx.strokeStyle = color;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2.5;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
 
@@ -586,7 +637,7 @@
       const y = box.top + box.h - (value / maxVal) * box.h;
       ctx.beginPath();
       ctx.fillStyle = color;
-      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.arc(x, y, 3.5, 0, Math.PI * 2);
       ctx.fill();
     }
 
