@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,20 +10,24 @@
       --surface: #ffffff;
       --surface-2: #f8fbff;
       --text: #1e293b;
-      --muted: #64748b;
+      --muted: #475569;
       --border: #dbe4f0;
       --primary: #2563eb;
       --primary-2: #dbeafe;
       --tuna: #0ea5e9;
       --shark: #f43f5e;
+      --success: #16a34a;
+      --warn: #d97706;
       --radius: 12px;
       --shadow: 0 8px 24px rgba(15,23,42,0.07);
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     html, body {
       height: 100%;
-      overflow: hidden;
     }
+
     body {
       font-family: Inter, system-ui, -apple-system, sans-serif;
       background: linear-gradient(180deg, #f8fbff 0%, #f2f6fb 100%);
@@ -32,30 +36,38 @@
       padding: 10px 14px;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
+
     header {
       display: flex;
       align-items: baseline;
       gap: 10px;
       margin-bottom: 8px;
       flex-shrink: 0;
+      min-height: 28px;
     }
+
     h1 {
       font-size: 1.15rem;
       color: #0f172a;
       white-space: nowrap;
     }
+
     .subtitle {
       color: var(--muted);
       font-size: 0.8rem;
     }
+
     .layout {
       display: grid;
       grid-template-columns: 300px 1fr;
       gap: 12px;
       flex: 1;
       min-height: 0;
+      overflow: hidden;
     }
+
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -67,39 +79,46 @@
       min-height: 0;
       overflow: hidden;
     }
+
     .card h2 {
       font-size: 0.85rem;
-      color: #243244;
+      color: #111827;
       padding-bottom: 6px;
       border-bottom: 1px solid #eef3f8;
       margin-bottom: 6px;
       flex-shrink: 0;
     }
+
     .controls {
       display: flex;
       flex-direction: column;
       gap: 4px;
       flex: 1;
-      overflow: hidden;
+      min-height: 0;
+      overflow: visible;
     }
+
     .control-group {
       display: grid;
       grid-template-columns: 130px 1fr 52px;
       align-items: center;
       gap: 6px;
     }
+
     .control-group label {
       font-size: 0.78rem;
       font-weight: 600;
-      color: var(--text);
+      color: #111827;
       line-height: 1.2;
     }
+
     input[type="range"] {
       width: 100%;
       accent-color: var(--primary);
       cursor: pointer;
       height: 16px;
     }
+
     .value-display {
       display: inline-flex;
       align-items: center;
@@ -113,6 +132,7 @@
       font-weight: 700;
       font-size: 0.78rem;
     }
+
     .button-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -120,6 +140,7 @@
       margin-top: 6px;
       flex-shrink: 0;
     }
+
     button {
       border: none;
       border-radius: 8px;
@@ -130,11 +151,14 @@
       cursor: pointer;
       transition: transform 0.1s, opacity 0.15s;
     }
+
     button:hover { opacity: 0.93; }
     button:active { transform: scale(0.975); }
+
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #e2e8f0; color: #1e293b; }
     .btn-danger { background: #fee2e2; color: #be123c; }
+
     .status-bar {
       margin-top: 5px;
       padding: 5px 8px;
@@ -145,6 +169,7 @@
       color: var(--muted);
       flex-shrink: 0;
     }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -152,117 +177,179 @@
       margin-top: 5px;
       flex-shrink: 0;
     }
+
     .stat {
       background: #f8fbff;
       border: 1px solid #e6eef8;
       border-radius: 8px;
       padding: 4px 6px;
     }
+
     .stat-label {
       display: block;
       font-size: 0.7rem;
-      color: var(--muted);
+      color: #334155;
     }
+
     .stat-value {
       font-family: ui-monospace, Menlo, Consolas, monospace;
       font-weight: 700;
       font-size: 0.82rem;
       color: #0f172a;
     }
+
     .chart-card {
       display: flex;
       flex-direction: column;
       gap: 6px;
       min-height: 0;
+      overflow: hidden;
     }
+
     .canvas-wrap {
       background: #fff;
       border: 1px solid #e7eef6;
       border-radius: 10px;
       padding: 6px;
       flex: 1;
-      min-height: 0;
+      min-height: 220px;
       display: flex;
+      overflow: hidden;
     }
+
     canvas {
-      width: 100% !important;
-      height: 100% !important;
+      width: 100%;
+      height: 100%;
       display: block;
       border-radius: 6px;
+      background: #fff;
     }
+
     .legend {
       display: flex;
       gap: 16px;
       justify-content: center;
-      color: #334155;
+      color: #111827;
       font-size: 0.8rem;
       font-weight: 700;
       flex-shrink: 0;
     }
-    .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-swatch { width: 14px; height: 3px; border-radius: 999px; }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-swatch {
+      width: 14px;
+      height: 3px;
+      border-radius: 999px;
+    }
+
     .math-box {
       flex-shrink: 0;
       background: #162232;
       color: #dbeafe;
       border-radius: 10px;
-      padding: 5px 10px;
+      padding: 7px 10px;
       font-family: ui-monospace, Menlo, Consolas, monospace;
       font-size: 0.72rem;
+      line-height: 1.35;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
+      overflow: visible;
+      white-space: normal;
     }
-    .math-title { color: #fbbf24; font-weight: 800; }
-    .math-code { color: #7dd3fc; }
+
+    .math-title {
+      color: #fbbf24;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .math-code {
+      color: #7dd3fc;
+      min-width: 0;
+      word-break: break-word;
+    }
+
+    @media (max-width: 920px) {
+      body {
+        overflow: auto;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+        overflow: visible;
+      }
+
+      .card,
+      .chart-card {
+        overflow: visible;
+      }
+
+      .canvas-wrap {
+        min-height: 300px;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>🦈 Shark-Tuna Population Simulator</h1>
+    <h1>Shark-Tuna Population Simulator</h1>
     <p class="subtitle">Forward Euler integration · live plotting</p>
   </header>
 
   <div class="layout">
     <section class="card">
       <h2>Initial Conditions &amp; Rates</h2>
+
       <div class="controls">
         <div class="control-group">
           <label for="p-tuna-init">Tuna Init (T₀)</label>
           <input type="range" id="p-tuna-init" min="10" max="150" value="60">
           <span class="value-display" id="v-tuna-init">60</span>
         </div>
+
         <div class="control-group">
           <label for="p-sharks-init">Shark Init (S₀)</label>
           <input type="range" id="p-sharks-init" min="5" max="100" value="20">
           <span class="value-display" id="v-sharks-init">20</span>
         </div>
+
         <div class="control-group">
           <label for="p-tuna-birth">Tuna Birth Rate (a)</label>
           <input type="range" id="p-tuna-birth" min="0.10" max="1.50" step="0.05" value="0.70">
           <span class="value-display" id="v-tuna-birth">0.70</span>
         </div>
+
         <div class="control-group">
           <label for="p-hunt">Hunt Efficiency (b)</label>
           <input type="range" id="p-hunt" min="0.005" max="0.10" step="0.005" value="0.02">
           <span class="value-display" id="v-hunt">0.02</span>
         </div>
+
         <div class="control-group">
           <label for="p-shark-death">Shark Death Rate (d)</label>
           <input type="range" id="p-shark-death" min="0.10" max="1.50" step="0.05" value="0.50">
           <span class="value-display" id="v-shark-death">0.50</span>
         </div>
+
         <div class="control-group">
           <label for="p-dt">Time Step (dt)</label>
           <input type="range" id="p-dt" min="0.01" max="0.20" step="0.01" value="0.04">
           <span class="value-display" id="v-dt">0.04</span>
         </div>
+
         <div class="control-group">
           <label for="p-max-time">Sim Length</label>
           <input type="range" id="p-max-time" min="10" max="100" step="5" value="45">
           <span class="value-display" id="v-max-time">45</span>
         </div>
+
         <div class="control-group">
           <label for="p-speed">Animation Speed</label>
           <input type="range" id="p-speed" min="1" max="20" step="1" value="3">
@@ -271,30 +358,48 @@
       </div>
 
       <div class="button-row">
-        <button class="btn-primary" id="runBtn">▶ Run</button>
+        <button class="btn-primary" id="runBtn">Run</button>
         <button class="btn-secondary" id="pauseBtn">Pause</button>
         <button class="btn-danger" id="resetBtn">Reset</button>
       </div>
+
       <div class="status-bar" id="statusBar">Ready. Adjust parameters and run.</div>
+
       <div class="stats">
-        <div class="stat"><span class="stat-label">Time</span><span class="stat-value" id="stat-time">0.00</span></div>
-        <div class="stat"><span class="stat-label">Tuna</span><span class="stat-value" id="stat-tuna">60.00</span></div>
-        <div class="stat"><span class="stat-label">Sharks</span><span class="stat-value" id="stat-shark">20.00</span></div>
+        <div class="stat">
+          <span class="stat-label">Time</span>
+          <span class="stat-value" id="stat-time">0.00</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Tuna</span>
+          <span class="stat-value" id="stat-tuna">60.00</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Sharks</span>
+          <span class="stat-value" id="stat-shark">20.00</span>
+        </div>
       </div>
     </section>
 
     <section class="card chart-card">
       <h2>Ecosystem Oscillations Over Time</h2>
+
       <div class="canvas-wrap">
         <canvas id="customCanvas"></canvas>
       </div>
+
       <div class="legend">
         <div class="legend-item"><span class="legend-swatch" style="background:#0ea5e9"></span>Tuna (Prey)</div>
         <div class="legend-item"><span class="legend-swatch" style="background:#f43f5e"></span>Sharks (Predators)</div>
       </div>
+
       <div class="math-box">
-        <span class="math-title">Euler Engine</span>
-        <span class="math-code">T' = aT − bST &nbsp;|&nbsp; S' = bST − dS &nbsp;|&nbsp; Status: <span id="math-status" style="color:#86efac;font-weight:800;">Ready</span></span>
+        <span class="math-title">Forward Euler Mathematical State Engine</span>
+        <span class="math-code">
+          T' = aT − bST &nbsp;|&nbsp; S' = bST − dS &nbsp;|&nbsp;
+          T_next = T + dt·T' &nbsp;|&nbsp; S_next = S + dt·S' &nbsp;|&nbsp;
+          Status: <span id="math-status" style="color:#86efac;font-weight:800;">Ready</span>
+        </span>
       </div>
     </section>
   </div>
@@ -310,6 +415,7 @@
       maxTime: document.getElementById('p-max-time'),
       speed: document.getElementById('p-speed')
     };
+
     const displays = {
       tunaInit: document.getElementById('v-tuna-init'),
       sharkInit: document.getElementById('v-sharks-init'),
@@ -332,13 +438,26 @@
     const canvas = document.getElementById('customCanvas');
     const ctx = canvas.getContext('2d');
 
-    let sim = null, animationId = null, isPaused = false;
+    let sim = null;
+    let animationId = null;
+    let isPaused = false;
 
     function resizeCanvas() {
       const wrap = canvas.parentElement;
-      canvas.width = wrap.clientWidth - 12;
-      canvas.height = wrap.clientHeight - 12;
-      if (sim) drawChart(sim); else drawStaticPreview();
+      const dpr = window.devicePixelRatio || 1;
+      const cssWidth = Math.max(320, wrap.clientWidth - 12);
+      const cssHeight = Math.max(220, wrap.clientHeight - 12);
+
+      canvas.style.width = cssWidth + 'px';
+      canvas.style.height = cssHeight + 'px';
+      canvas.width = Math.round(cssWidth * dpr);
+      canvas.height = Math.round(cssHeight * dpr);
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+
+      if (sim) drawChart(sim);
+      else drawStaticPreview();
     }
 
     function updateTextBadges() {
@@ -350,8 +469,13 @@
       displays.dt.textContent = Number(controls.dt.value).toFixed(2);
       displays.maxTime.textContent = controls.maxTime.value;
       displays.speed.textContent = controls.speed.value;
-      if (!sim || !sim.running) setStatus("Parameters modified. Click Run.", '#d97706');
+
+      if (!sim || !sim.running) {
+        setStatus("Parameters modified. Click Run.", '#d97706');
+      }
+
       syncStatsPreview();
+      drawStaticPreview();
     }
 
     function setStatus(text, color) {
@@ -372,17 +496,24 @@
       const S0 = Number(controls.sharkInit.value);
       const dt = Number(controls.dt.value);
       const maxTime = Number(controls.maxTime.value);
+
       return {
-        T: T0, S: S0,
+        T: T0,
+        S: S0,
         a: Number(controls.tunaBirth.value),
         b: Number(controls.hunt.value),
         d: Number(controls.sharkDeath.value),
-        dt, maxTime,
+        dt,
+        maxTime,
         stepsPerFrame: Number(controls.speed.value),
-        time: 0, step: 0,
+        time: 0,
+        step: 0,
         totalSteps: Math.max(1, Math.floor(maxTime / dt)),
-        tunaPoints: [T0], sharkPoints: [S0], timePoints: [0],
-        maxVal: Math.max(T0, S0, 1), running: true
+        tunaPoints: [T0],
+        sharkPoints: [S0],
+        timePoints: [0],
+        maxVal: Math.max(T0, S0, 1),
+        running: true
       };
     }
 
@@ -395,63 +526,116 @@
 
     function stepSimulation(state) {
       for (let n = 0; n < state.stepsPerFrame; n++) {
-        if (state.step >= state.totalSteps) { state.running = false; return; }
+        if (state.step >= state.totalSteps) {
+          state.running = false;
+          return;
+        }
+
         const dT = (state.a * state.T) - (state.b * state.S * state.T);
         const dS = (state.b * state.S * state.T) - (state.d * state.S);
+
         state.T = Math.max(0, state.T + state.dt * dT);
         state.S = Math.max(0, state.S + state.dt * dS);
-        state.time += state.dt; state.step += 1;
-        state.tunaPoints.push(state.T); state.sharkPoints.push(state.S); state.timePoints.push(state.time);
+        state.time += state.dt;
+        state.step += 1;
+
+        state.tunaPoints.push(state.T);
+        state.sharkPoints.push(state.S);
+        state.timePoints.push(state.time);
         state.maxVal = Math.max(state.maxVal, state.T, state.S);
       }
     }
 
     function drawAxes(maxVal, maxTime) {
-      const W = canvas.width, H = canvas.height;
-      const pad = { left: 48, right: 14, top: 12, bottom: 36 };
+      const W = parseFloat(canvas.style.width) || canvas.clientWidth;
+      const H = parseFloat(canvas.style.height) || canvas.clientHeight;
+
+      const pad = { left: 54, right: 18, top: 16, bottom: 40 };
       const w = W - pad.left - pad.right;
       const h = H - pad.top - pad.bottom;
+
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
-      ctx.strokeStyle = '#eef2f7'; ctx.lineWidth = 1;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 1;
+
       for (let i = 0; i <= 4; i++) {
         const y = pad.top + (h * i / 4);
-        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
-        ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
-        ctx.fillText(Math.round(maxVal - (maxVal * i / 4)), pad.left - 5, y + 3);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
+
+        ctx.fillStyle = '#000000';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(Math.round(maxVal - (maxVal * i / 4)), pad.left - 7, y + 4);
       }
+
       for (let i = 0; i <= 6; i++) {
         const x = pad.left + (w * i / 6);
-        ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, H - pad.bottom); ctx.stroke();
-        ctx.textAlign = 'center'; ctx.fillStyle = '#64748b';
-        ctx.fillText((maxTime * i / 6).toFixed(0), x, H - pad.bottom + 14);
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, H - pad.bottom);
+        ctx.stroke();
+
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#000000';
+        ctx.font = '11px sans-serif';
+        ctx.fillText((maxTime * i / 6).toFixed(0), x, H - pad.bottom + 16);
       }
-      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, H - pad.bottom);
-      ctx.lineTo(W - pad.right, H - pad.bottom); ctx.stroke();
-      ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('Time', pad.left + w / 2, H - 6);
-      ctx.save(); ctx.translate(12, pad.top + h / 2); ctx.rotate(-Math.PI / 2);
-      ctx.fillText('Population', 0, 0); ctx.restore();
+
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top);
+      ctx.lineTo(pad.left, H - pad.bottom);
+      ctx.lineTo(W - pad.right, H - pad.bottom);
+      ctx.stroke();
+
+      ctx.fillStyle = '#000000';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Time', pad.left + w / 2, H - 8);
+
+      ctx.save();
+      ctx.translate(16, pad.top + h / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = '#000000';
+      ctx.fillText('Population', 0, 0);
+      ctx.restore();
+
       return { ...pad, w, h };
     }
 
     function drawLine(values, times, color, maxVal, maxTime, box) {
       if (values.length < 2) return;
-      ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2.5;
-      ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+
       for (let i = 0; i < values.length; i++) {
         const x = box.left + (times[i] / maxTime) * box.w;
         const y = box.top + box.h - (values[i] / maxVal) * box.h;
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       }
+
       ctx.stroke();
     }
 
     function drawCurrentMarker(value, time, color, maxVal, maxTime, box) {
       const x = box.left + (time / maxTime) * box.w;
       const y = box.top + box.h - (value / maxVal) * box.h;
-      ctx.beginPath(); ctx.fillStyle = color; ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     function drawChart(state) {
@@ -465,61 +649,94 @@
 
     function animate() {
       if (!sim || isPaused) return;
-      stepSimulation(sim); drawChart(sim); updateStats();
+
+      stepSimulation(sim);
+      drawChart(sim);
+      updateStats();
+
       if (sim.running) {
-        setStatus(`Running… t = ${sim.time.toFixed(2)}`, '#2563eb');
+        setStatus(`Running... t = ${sim.time.toFixed(2)}`, '#2563eb');
         animationId = requestAnimationFrame(animate);
       } else {
-        setStatus(`Done · t = ${sim.time.toFixed(2)}`, '#16a34a');
+        setStatus(`Done. t = ${sim.time.toFixed(2)}`, '#16a34a');
         animationId = null;
       }
     }
 
     function startSimulation() {
       if (animationId) cancelAnimationFrame(animationId);
-      isPaused = false; pauseBtn.textContent = 'Pause';
-      sim = createSimulation(); drawChart(sim); updateStats();
-      setStatus('Running… t = 0.00', '#2563eb');
+      isPaused = false;
+      pauseBtn.textContent = 'Pause';
+      sim = createSimulation();
+      drawChart(sim);
+      updateStats();
+      setStatus('Running... t = 0.00', '#2563eb');
       animationId = requestAnimationFrame(animate);
     }
 
     function togglePause() {
       if (!sim || !sim.running) return;
+
       isPaused = !isPaused;
+
       if (isPaused) {
-        if (animationId) cancelAnimationFrame(animationId); animationId = null;
-        pauseBtn.textContent = 'Resume'; setStatus(`Paused at t = ${sim.time.toFixed(2)}`, '#d97706');
+        if (animationId) cancelAnimationFrame(animationId);
+        animationId = null;
+        pauseBtn.textContent = 'Resume';
+        setStatus(`Paused at t = ${sim.time.toFixed(2)}`, '#d97706');
       } else {
-        pauseBtn.textContent = 'Pause'; setStatus(`Running… t = ${sim.time.toFixed(2)}`, '#2563eb');
+        pauseBtn.textContent = 'Pause';
+        setStatus(`Running... t = ${sim.time.toFixed(2)}`, '#2563eb');
         animationId = requestAnimationFrame(animate);
       }
     }
 
     function resetSimulation() {
       if (animationId) cancelAnimationFrame(animationId);
-      animationId = null; isPaused = false; pauseBtn.textContent = 'Pause'; sim = null;
-      syncStatsPreview(); setStatus('Reset. Ready.', '#16a34a'); drawStaticPreview();
+      animationId = null;
+      isPaused = false;
+      pauseBtn.textContent = 'Pause';
+      sim = null;
+      syncStatsPreview();
+      setStatus('Reset. Ready.', '#16a34a');
+      drawStaticPreview();
     }
 
     function drawStaticPreview() {
+      if (!canvas.clientWidth || !canvas.clientHeight) return;
+
       const preview = {
-        T: Number(controls.tunaInit.value), S: Number(controls.sharkInit.value),
-        maxVal: Math.max(Number(controls.tunaInit.value), Number(controls.sharkInit.value), 10),
+        T: Number(controls.tunaInit.value),
+        S: Number(controls.sharkInit.value),
+        maxVal: Math.max(
+          Number(controls.tunaInit.value),
+          Number(controls.sharkInit.value),
+          10
+        ),
         maxTime: Number(controls.maxTime.value),
-        tunaPoints: [Number(controls.tunaInit.value)], sharkPoints: [Number(controls.sharkInit.value)],
-        timePoints: [0], time: 0
+        tunaPoints: [Number(controls.tunaInit.value)],
+        sharkPoints: [Number(controls.sharkInit.value)],
+        timePoints: [0],
+        time: 0
       };
+
       drawChart(preview);
     }
 
-    Object.values(controls).forEach(c => c.addEventListener('input', updateTextBadges));
+    Object.values(controls).forEach(control => {
+      control.addEventListener('input', updateTextBadges);
+    });
+
     runBtn.addEventListener('click', startSimulation);
     pauseBtn.addEventListener('click', togglePause);
     resetBtn.addEventListener('click', resetSimulation);
     window.addEventListener('resize', resizeCanvas);
 
     updateTextBadges();
-    setTimeout(resizeCanvas, 50);
+    requestAnimationFrame(() => {
+      resizeCanvas();
+      drawStaticPreview();
+    });
   </script>
 </body>
 </html>
